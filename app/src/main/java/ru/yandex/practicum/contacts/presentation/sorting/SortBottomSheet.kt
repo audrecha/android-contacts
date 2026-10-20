@@ -27,7 +27,7 @@ fun SortBottomSheet(
         items = SortOrder.entries,
         selectedItems = setOf(currentSortOrder),
         onItemsSelected = { selected ->
-            selected.firstOrNull()?.let { onSortOrderSelected(it) }
+            onSortOrderSelected(selected.firstOrNull { it != currentSortOrder } ?: currentSortOrder)
         },
         onDismiss = onDismiss
     ) { sortOrder, isSelected ->
