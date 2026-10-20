@@ -1,0 +1,30 @@
+name: Android checks
+on:
+  push:
+    branches: [generics-refactoring]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build and lint
+        run: bash gradlew clean assembleDebug testDebugUnitTest lintDebug
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-reports
+          path: app/build/reports/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: contacts-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
